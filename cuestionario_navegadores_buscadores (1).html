@@ -1,0 +1,153 @@
+
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-sans)}
+  .wrap{padding:1.5rem 0}
+  .header{border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:1.25rem;margin-bottom:1.75rem}
+  .header-title{font-size:20px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+  .header-meta{display:flex;gap:1.5rem;margin-top:8px;flex-wrap:wrap}
+  .header-meta span{font-size:13px;color:var(--color-text-secondary)}
+  .header-meta strong{color:var(--color-text-primary);font-weight:500}
+  .prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .prog-label{font-size:12px;color:var(--color-text-tertiary)}
+  .prog-track{height:3px;background:var(--color-background-secondary);border-radius:99px;margin-bottom:1.75rem}
+  .prog-fill{height:3px;background:#534AB7;border-radius:99px;transition:width 0.35s}
+  .q-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.25rem}
+  .q-tag{font-size:11px;font-weight:500;color:#534AB7;background:#EEEDFE;padding:3px 10px;border-radius:99px;display:inline-block;margin-bottom:12px}
+  .q-text{font-size:15px;font-weight:500;color:var(--color-text-primary);line-height:1.55;margin-bottom:1.1rem}
+  .opts{display:flex;flex-direction:column;gap:7px}
+  .opt{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 14px;font-size:14px;color:var(--color-text-primary);cursor:pointer;text-align:left;transition:background 0.12s,border-color 0.12s;line-height:1.45}
+  .opt:hover:not(:disabled){background:var(--color-background-tertiary);border-color:var(--color-border-secondary)}
+  .opt.correct{background:#EEEDFE;border-color:#534AB7;color:#26215C}
+  .opt.wrong{background:#FCEBEB;border-color:#A32D2D;color:#501313}
+  .feedback-box{margin-top:12px;padding:10px 14px;border-radius:var(--border-radius-md);font-size:13px;line-height:1.55}
+  .feedback-box.ok{background:#EEEDFE;color:#3C3489}
+  .feedback-box.fail{background:#FCEBEB;color:#791F1F}
+  .next-btn{margin-top:1.25rem;background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:9px 22px;font-size:14px;color:var(--color-text-primary);cursor:pointer}
+  .next-btn:hover{background:var(--color-background-secondary)}
+  .result-wrap{text-align:center;padding:2rem 0 1rem}
+  .result-nota{font-size:56px;font-weight:500;color:var(--color-text-primary);line-height:1}
+  .result-sub{font-size:14px;color:var(--color-text-secondary);margin-top:6px;margin-bottom:1.25rem}
+  .pill{display:inline-block;padding:4px 16px;border-radius:99px;font-size:13px;font-weight:500;margin-bottom:1.75rem}
+  .pill.a{background:#EEEDFE;color:#3C3489}
+  .pill.b{background:#FAEEDA;color:#633806}
+  .pill.c{background:#FCEBEB;color:#791F1F}
+  .result-list{text-align:left;display:flex;flex-direction:column;gap:8px;margin-bottom:1.75rem}
+  .r-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--color-text-secondary);line-height:1.45}
+  .r-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+  .r-dot.ok{background:#534AB7}
+  .r-dot.fail{background:#E24B4A}
+  .restart{background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:10px 28px;font-size:14px;color:var(--color-text-primary);cursor:pointer}
+  .restart:hover{background:var(--color-background-secondary)}
+</style>
+
+<div class="wrap">
+  <h2 style="position:absolute;left:-9999px">Cuestionario navegadores y buscadores</h2>
+
+  <div class="header">
+    <div class="header-title">Cuestionario</div>
+    <div class="header-meta">
+      <span><strong>Unidad curricular:</strong> Diseño Web</span>
+      <span><strong>Docente:</strong> Gianna Giupponi</span>
+      <span><strong>Tema:</strong> Navegadores y buscadores</span>
+    </div>
+  </div>
+
+  <div class="prog-row">
+    <span class="prog-label" id="prog-label">Pregunta 1 de 10</span>
+    <span class="prog-label" id="score-label"></span>
+  </div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+
+  <div id="quiz-body"></div>
+</div>
+
+<script>
+const Q = [
+  {q:"¿Cuál es la diferencia principal entre un navegador y un buscador?",opts:["Son exactamente lo mismo, solo con nombres diferentes","El navegador es el programa para acceder a internet; el buscador es un sitio para encontrar información","El navegador busca información y el buscador abre páginas web","El buscador es un tipo de navegador más avanzado"],c:1,exp:"El navegador (como Chrome o Firefox) es el software que permite abrir páginas web. El buscador (como Google o Bing) es un servicio que indexa páginas para ayudarte a encontrar información."},
+  {q:"¿Cuál de los siguientes es un navegador web?",opts:["Google","Bing","Mozilla Firefox","Yahoo"],c:2,exp:"Mozilla Firefox es un navegador web. Google, Bing y Yahoo son motores de búsqueda."},
+  {q:"¿Qué significa URL?",opts:["Uniform Resource Locator (Localizador Uniforme de Recursos)","Universal Remote Link","User Resource Language","Unified Reading Location"],c:0,exp:"URL significa Uniform Resource Locator. Es la dirección única que identifica cada página o recurso en internet, por ejemplo: https://www.google.com"},
+  {q:"¿Cuál de estas afirmaciones sobre Google es correcta?",opts:["Google es únicamente un navegador web","Google es un sistema operativo","Google es un motor de búsqueda que también ofrece su propio navegador llamado Chrome","Google fue el primer navegador web de la historia"],c:2,exp:"Google es principalmente un motor de búsqueda. Además desarrolló su propio navegador, Google Chrome, que es actualmente el más utilizado en el mundo."},
+  {q:"¿Qué función cumple la barra de direcciones en un navegador?",opts:["Solo sirve para escribir búsquedas en Google","Permite ingresar la URL de una página o realizar búsquedas directamente","Guarda los favoritos del usuario","Muestra el historial de navegación"],c:1,exp:"La barra de direcciones permite escribir la URL exacta de un sitio para ir directamente, o palabras clave que el navegador envía al buscador predeterminado."},
+  {q:"¿Cuál de los siguientes NO es un motor de búsqueda?",opts:["DuckDuckGo","Bing","Safari","Ecosia"],c:2,exp:"Safari es un navegador web desarrollado por Apple. DuckDuckGo, Bing y Ecosia son motores de búsqueda."},
+  {q:"¿Qué es el historial de navegación?",opts:["Una lista de los archivos descargados","Un registro de las páginas web que el usuario ha visitado","La carpeta donde se guardan los favoritos","El registro de contraseñas guardadas"],c:1,exp:"El historial de navegación es un registro cronológico de todas las páginas web que el usuario ha visitado, permitiendo volver a sitios anteriores."},
+  {q:"¿Cuál es la ventaja principal del modo incógnito o privado?",opts:["Hace que la conexión sea más rápida","Protege al usuario de virus y malware","No guarda el historial, cookies ni datos de formulario en el dispositivo","Oculta la dirección IP del usuario en internet"],c:2,exp:"El modo incógnito evita que el navegador guarde localmente el historial, cookies y datos de formularios. No oculta la actividad al proveedor de internet ni a los sitios visitados."},
+  {q:"¿Qué es un motor de búsqueda?",opts:["Un programa que traduce páginas web a otro idioma","Un sistema que indexa páginas web y permite buscar información mediante palabras clave","Un tipo de virus informático","El componente que procesa la velocidad de internet"],c:1,exp:"Un motor de búsqueda recorre y cataloga páginas web (indexación) y permite buscar información introduciendo palabras clave."},
+  {q:"¿Cuál es una buena práctica al buscar información en internet?",opts:["Usar siempre una sola palabra para buscar","Confiar en cualquier resultado que aparezca primero","Usar palabras clave específicas y verificar la fuente de la información","Escribir oraciones completas con puntuación para mejores resultados"],c:2,exp:"Conviene usar palabras clave específicas. Además, siempre se debe verificar que la fuente sea confiable; el orden en los resultados no garantiza veracidad."}
+];
+
+let cur=0,score=0,answered=false,log=[];
+
+function upd(){
+  document.getElementById('prog-fill').style.width=(cur/Q.length*100)+'%';
+  document.getElementById('prog-label').textContent='Pregunta '+(cur+1)+' de '+Q.length;
+  document.getElementById('score-label').textContent=score>0?score+' correcta'+(score!==1?'s':''):'';
+}
+
+function render(){
+  answered=false;
+  upd();
+  const q=Q[cur];
+  document.getElementById('quiz-body').innerHTML=`
+    <div class="q-card">
+      <span class="q-tag">Pregunta ${cur+1}</span>
+      <p class="q-text">${q.q}</p>
+      <div class="opts">
+        ${q.opts.map((o,i)=>`<button class="opt" id="o${i}" onclick="pick(${i})">${String.fromCharCode(65+i)}.&nbsp; ${o}</button>`).join('')}
+      </div>
+      <div id="fb" style="display:none"></div>
+    </div>
+    <button class="next-btn" id="nb" onclick="nxt()" style="display:none">${cur<Q.length-1?'Siguiente pregunta →':'Ver resultados →'}</button>
+  `;
+}
+
+window.pick=function(i){
+  if(answered)return;
+  answered=true;
+  const q=Q[cur];
+  const ok=i===q.c;
+  if(ok)score++;
+  log.push({ok,qtext:q.q});
+  for(let j=0;j<q.opts.length;j++){
+    const b=document.getElementById('o'+j);
+    b.disabled=true;
+    if(j===q.c)b.classList.add('correct');
+    else if(j===i&&!ok)b.classList.add('wrong');
+  }
+  const fb=document.getElementById('fb');
+  fb.style.display='block';
+  fb.className='feedback-box '+(ok?'ok':'fail');
+  fb.textContent=(ok?'Correcto. ':'Incorrecto. ')+q.exp;
+  document.getElementById('nb').style.display='inline-block';
+  upd();
+};
+
+window.nxt=function(){
+  cur++;
+  if(cur<Q.length){render();}else{showResult();}
+};
+
+function showResult(){
+  document.getElementById('prog-fill').style.width='100%';
+  document.getElementById('prog-label').textContent='Completado';
+  document.getElementById('score-label').textContent='';
+  const nota=(score/Q.length)*10;
+  const notaStr=Number.isInteger(nota)?nota.toFixed(0):nota.toFixed(1);
+  const pillClass=nota>=7?'a':nota>=5?'b':'c';
+  const pillText=nota>=7?'Aprobado':nota>=5?'Suficiente':'Reprueba';
+  document.getElementById('quiz-body').innerHTML=`
+    <div class="result-wrap">
+      <div class="result-nota">${notaStr}<span style="font-size:24px;color:var(--color-text-tertiary)">/10</span></div>
+      <div class="result-sub">${score} respuestas correctas de ${Q.length}</div>
+      <div class="pill ${pillClass}">${pillText}</div>
+      <div class="result-list">
+        ${log.map((l,i)=>`<div class="r-item"><div class="r-dot ${l.ok?'ok':'fail'}"></div><span>P${i+1}. ${l.qtext.substring(0,65)}${l.qtext.length>65?'…':''}</span></div>`).join('')}
+      </div>
+      <button class="restart" onclick="restart()">Reiniciar cuestionario</button>
+    </div>
+  `;
+}
+
+window.restart=function(){cur=0;score=0;answered=false;log=[];render();};
+render();
+</script>
